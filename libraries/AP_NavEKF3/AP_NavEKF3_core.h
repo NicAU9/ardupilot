@@ -1648,5 +1648,6 @@ private:
     // Grs Log
     void Log_Write_GRSF(uint64_t time_us) const;
     void Log_Write_GRSV(uint64_t time_us) const;
+    void Log_Write_GRSP(uint64_t time_us) const;
     void Log_Write_GRSE(uint64_t time_us) const;
 };

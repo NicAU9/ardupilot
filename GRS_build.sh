@@ -3,13 +3,10 @@
 echo "Building GRS program"
 
 echo -n "Cleaning... "
-./waf clean > /dev/null 2>&1
-echo "Done."
+./waf clean
 
 echo -n "Configuring... "
-./waf configure --board cubeblack > /dev/null 2>&1
-echo "Done."
+./waf configure --board cubeblack
 
 echo "Compiling..."
-./waf plane > /dev/null 2>&1
-echo "Build complete!"
+./waf plane

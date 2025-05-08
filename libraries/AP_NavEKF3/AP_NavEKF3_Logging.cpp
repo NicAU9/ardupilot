@@ -400,8 +400,12 @@ void NavEKF3_core::Log_Write(uint64_t time_us)
 
     Log_Write_XKFS(time_us);
     Log_Write_Quaternion(time_us);
+
+    // GRS logs
     Log_Write_GRSF(time_us);
     Log_Write_GRSV(time_us);
+    Log_Write_GRSP(time_us);
+    Log_Write_GRSE(time_us);
 
 
 #if EK3_FEATURE_BEACON_FUSION
@@ -464,20 +468,16 @@ void NavEKF3_core::Log_Write_GRSF(uint64_t time_us) const
 
         bStatesInitialised : statesInitialised,
         bMagHealth : magHealth,
-        bVbelTimeout : velTimeout,
+        bVelTimeout : velTimeout,
         bPosTimeout : posTimeout,
         bHgtTimeout : hgtTimeout,
+        bMagTimeout : magTimeout,
         bTasTimeout : tasTimeout,
         bDragTimeout : dragTimeout,
         bBadIMUdata : badIMUdata,
-        bVrunUpdateselAiding : velAiding,           
+        bVelAiding : velAiding,           
         bWaitingForGpsChecks : waitingForGpsChecks,
         bRunUpdates : runUpdates,
-
-        bfuseVelData : fuseVelData,
-        bfusePosData : fusePosData,
-        bfuseHgtData : fuseHgtData,
-
         bEKFGSF_run_filterbank : EKFGSF_run_filterbank
     };
 
@@ -491,17 +491,9 @@ void NavEKF3_core::Log_Write_GRSV(uint64_t time_us) const
         time_us      : time_us,
         core         : DAL_CORE(core_index),
 
-        gpsPosEstimationN : velPosObs[3],
-        gpsPosEstimationE : velPosObs[4],
-        gpsPosEstimationD : velPosObs[5],
-
         gpsVelEstimationN : velPosObs[0],
         gpsVelEstimationE : velPosObs[1],
         gpsVelEstimationD : velPosObs[2],
-
-        imuPosEstimationN : predImuPos.x,
-        imuPosEstimationE : predImuPos.y,
-        imuPosEstimationD : predImuPos.z,
 
         imuVelEstimationN : predImuVel.x,
         imuVelEstimationE : predImuVel.y,
@@ -511,9 +503,28 @@ void NavEKF3_core::Log_Write_GRSV(uint64_t time_us) const
     AP::logger().WriteBlock(&grsv, sizeof(grsv));
 }
 
+void NavEKF3_core::Log_Write_GRSP(uint64_t time_us) const
+{
+    const struct log_GRSP grsp{
+        LOG_PACKET_HEADER_INIT(LOG_GRSP_MSG),
+        time_us      : time_us,
+        core         : DAL_CORE(core_index),
+
+        gpsPosEstimationN : velPosObs[3],
+        gpsPosEstimationE : velPosObs[4],
+        gpsPosEstimationD : velPosObs[5],
+
+        imuPosEstimationN : predImuPos.x,
+        imuPosEstimationE : predImuPos.y,
+        imuPosEstimationD : predImuPos.z
+    };
+
+    AP::logger().WriteBlock(&grsp, sizeof(grsp));
+}
+
 void NavEKF3_core::Log_Write_GRSE(uint64_t time_us) const
 {
-    const struct log_GRSV grse{
+    const struct log_GRSE grse{
         LOG_PACKET_HEADER_INIT(LOG_GRSE_MSG),
         time_us      : time_us,
         core         : DAL_CORE(core_index),

@@ -22,6 +22,7 @@
     LOG_XKY1_MSG, \
     LOG_GRSF_MSG, \
     LOG_GRSV_MSG, \
+    LOG_GRSP_MSG, \
     LOG_GRSE_MSG
 
 // @LoggerMessage: XKF0
@@ -439,28 +440,38 @@ struct PACKED log_GRSF
     uint64_t time_us;
     uint8_t core;
 
-    bool bStatesInitialised;         // boolean true when filter states have been initialised
-    bool bMagHealth;                 // boolean true if magnetometer has passed innovation consistency check
-    bool bVelTimeout;                // boolean true if velocity measurements have failed innovation consistency check and timed out
-    bool bPosTimeout;                // boolean true if position measurements have failed innovation consistency check and timed out
-    bool bHgtTimeout;                // boolean true if height measurements have failed innovation consistency check and timed out
-    bool bMagTimeout;                // boolean true if magnetometer measurements have failed for too long and have timed out
-    bool bTasTimeout;                // boolean true if true airspeed measurements have failed for too long and have timed out
-    bool bDragTimeout;               // boolean true if drag measurements have failed for too long and have timed out
-    bool bBadIMUdata;                // boolean true if the bad IMU data is detected
-    bool bVelAiding;                 // boolean true if the velocity drift is constrained by observations
-    bool bWaitingForGpsChecks;
-    bool bRunUpdates;       
-    
-    bool bfuseVelData;  // boolean true if gps is fusing velocity
-    bool bfusePosData;  // boolean true if gps is fusing position 
-    bool bfuseHgtData;  // boolean true if gps is fusing height
-
-    bool bEKFGSF_run_filterbank; // boolean true if yaw estimator is running filterbank
-}
+    uint8_t bStatesInitialised;         // boolean true when filter states have been initialised
+    uint8_t bMagHealth;                 // boolean true if magnetometer has passed innovation consistency check
+    uint8_t bVelTimeout;                // boolean true if velocity measurements have failed innovation consistency check and timed out
+    uint8_t bPosTimeout;                // boolean true if position measurements have failed innovation consistency check and timed out
+    uint8_t bHgtTimeout;                // boolean true if height measurements have failed innovation consistency check and timed out
+    uint8_t bMagTimeout;                // boolean true if magnetometer measurements have failed for too long and have timed out
+    uint8_t bTasTimeout;                // boolean true if true airspeed measurements have failed for too long and have timed out
+    uint8_t bDragTimeout;               // boolean true if drag measurements have failed for too long and have timed out
+    uint8_t bBadIMUdata;                // boolean true if the bad IMU data is detected
+    uint8_t bVelAiding;                 // boolean true if the velocity drift is constrained by observations
+    uint8_t bWaitingForGpsChecks;
+    uint8_t bRunUpdates;       
+    uint8_t bEKFGSF_run_filterbank; // boolean true if yaw estimator is running filterbank
+};
 
 // @LoggerMessage: GRS_V
 struct PACKED log_GRSV
+{
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t core;
+
+    float gpsVelEstimationN;
+    float gpsVelEstimationE;
+    float gpsVelEstimationD;
+
+    float imuVelEstimationN;
+    float imuVelEstimationE;
+    float imuVelEstimationD;
+};
+
+struct PACKED log_GRSP
 {
     LOG_PACKET_HEADER;
     uint64_t time_us;
@@ -470,18 +481,10 @@ struct PACKED log_GRSV
     float gpsPosEstimationE;
     float gpsPosEstimationD;
 
-    float gpsVelEstimationN;
-    float gpsVelEstimationE;
-    float gpsVelEstimationD;
-
     float imuPosEstimationN;
     float imuPosEstimationE;
     float imuPosEstimationD;
-
-    float imuVelEstimationN;
-    float imuVelEstimationE;
-    float imuVelEstimationD;
-}
+};
 
 // @LoggerMessage: GRS_E
 struct PACKED log_GRSE
@@ -530,9 +533,11 @@ struct PACKED log_GRSE
     { LOG_XKV2_MSG, sizeof(log_XKV), \
       "XKV2","QBffffffffffff","TimeUS,C,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23", "s#------------", "F-------------" , true }, \
     { LOG_GRSF_MSG, sizeof(log_GRSF), \
-      "GRSF","QBBBBBBBBBBBBB","TimeUS,C,StatesInit,MagH,VTimeout,PTimeout,HTimeout,MTimeout,TTimeout,DTimeout,BadIMU,VelA,GpsChecks,RunUpdates", "s#------------", "F-------------" , true }, \
+      "GRSF","QBBBBBBBBBBBBBB","TimeUS,C,Init,MagH,VTO,PTO,HTO,MTO,TTO,DTO,BIMU,VelA,GpsCh,RUp,FBank", "s#-------------", "F--------------" , true }, \
     { LOG_GRSV_MSG, sizeof(log_GRSV), \
-      "GRSV","QBffffffffffff","TimeUS,C,gpsPN,gpsPE,gpsPD,gpsVN,gpsVE,gpsVD,imuPN,imuPE,imuPD,imuVN,imuVE,imuVD", "s#------------", "F-------------" , true }, \
+      "GRSV","QBffffff","TimeUS,C,gpsVN,gpsVE,gpsVD,imuVN,imuVE,imuVD", "s#------", "F-------" , true }, \
+    { LOG_GRSP_MSG, sizeof(log_GRSP), \
+      "GRSP","QBffffff","TimeUS,C,gpsPN,gpsPE,gpsPD,imuPN,imuPE,imuPD", "s#------", "F-------" , true }, \
     { LOG_GRSE_MSG, sizeof(log_GRSE), \
       "GRSE","QBffffff","TimeUS,C,PosErrorN,PosErrorE,PosErrorD,VelErrorN,VelErrorE,VelErrorD", "s#------", "F-------" , true },
 #else
