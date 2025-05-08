@@ -400,6 +400,8 @@ void NavEKF3_core::Log_Write(uint64_t time_us)
 
     Log_Write_XKFS(time_us);
     Log_Write_Quaternion(time_us);
+    Log_Write_GRSF(time_us);
+    Log_Write_GRSV(time_us);
 
 
 #if EK3_FEATURE_BEACON_FUSION
@@ -451,6 +453,81 @@ void NavEKF3_core::Log_Write_GSF(uint64_t time_us)
         return;
     }
     yawEstimator->Log_Write(time_us, LOG_XKY0_MSG, LOG_XKY1_MSG, DAL_CORE(core_index));
+}
+
+void NavEKF3_core::Log_Write_GRSF(uint64_t time_us) const
+{
+    const struct log_GRSF grsf{
+        LOG_PACKET_HEADER_INIT(LOG_GRSF_MSG),
+        time_us      : time_us,
+        core         : DAL_CORE(core_index),
+
+        bStatesInitialised : statesInitialised,
+        bMagHealth : magHealth,
+        bVbelTimeout : velTimeout,
+        bPosTimeout : posTimeout,
+        bHgtTimeout : hgtTimeout,
+        bTasTimeout : tasTimeout,
+        bDragTimeout : dragTimeout,
+        bBadIMUdata : badIMUdata,
+        bVrunUpdateselAiding : velAiding,           
+        bWaitingForGpsChecks : waitingForGpsChecks,
+        bRunUpdates : runUpdates,
+
+        bfuseVelData : fuseVelData,
+        bfusePosData : fusePosData,
+        bfuseHgtData : fuseHgtData,
+
+        bEKFGSF_run_filterbank : EKFGSF_run_filterbank
+    };
+
+    AP::logger().WriteBlock(&grsf, sizeof(grsf));
+}
+
+void NavEKF3_core::Log_Write_GRSV(uint64_t time_us) const
+{
+    const struct log_GRSV grsv{
+        LOG_PACKET_HEADER_INIT(LOG_GRSV_MSG),
+        time_us      : time_us,
+        core         : DAL_CORE(core_index),
+
+        gpsPosEstimationN : velPosObs[3],
+        gpsPosEstimationE : velPosObs[4],
+        gpsPosEstimationD : velPosObs[5],
+
+        gpsVelEstimationN : velPosObs[0],
+        gpsVelEstimationE : velPosObs[1],
+        gpsVelEstimationD : velPosObs[2],
+
+        imuPosEstimationN : predImuPos.x,
+        imuPosEstimationE : predImuPos.y,
+        imuPosEstimationD : predImuPos.z,
+
+        imuVelEstimationN : predImuVel.x,
+        imuVelEstimationE : predImuVel.y,
+        imuVelEstimationD : predImuVel.z
+    };
+
+    AP::logger().WriteBlock(&grsv, sizeof(grsv));
+}
+
+void NavEKF3_core::Log_Write_GRSE(uint64_t time_us) const
+{
+    const struct log_GRSV grse{
+        LOG_PACKET_HEADER_INIT(LOG_GRSE_MSG),
+        time_us      : time_us,
+        core         : DAL_CORE(core_index),
+
+        PosErrorN : posEKFerror.x,
+        PosErrorE : posEKFerror.y,
+        PosErrorD : posEKFerror.z,
+
+        VelErrorN : velEKFerror.x,
+        VelErrorE : velEKFerror.y,
+        VelErrorD : velEKFerror.z
+    };
+
+    AP::logger().WriteBlock(&grse, sizeof(grse));
 }
 
 #endif  // HAL_LOGGING_ENABLED

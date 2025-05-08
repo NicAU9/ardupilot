@@ -19,7 +19,10 @@
     LOG_XKV1_MSG, \
     LOG_XKV2_MSG, \
     LOG_XKY0_MSG, \
-    LOG_XKY1_MSG
+    LOG_XKY1_MSG, \
+    LOG_GRSF_MSG, \
+    LOG_GRSV_MSG, \
+    LOG_GRSE_MSG
 
 // @LoggerMessage: XKF0
 // @Description: EKF3 beacon sensor diagnostics
@@ -428,6 +431,75 @@ struct PACKED log_XKV {
     float v11;
 };
 
+
+// @LoggerMessage: GRS_F
+struct PACKED log_GRSF
+{
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t core;
+
+    bool bStatesInitialised;         // boolean true when filter states have been initialised
+    bool bMagHealth;                 // boolean true if magnetometer has passed innovation consistency check
+    bool bVelTimeout;                // boolean true if velocity measurements have failed innovation consistency check and timed out
+    bool bPosTimeout;                // boolean true if position measurements have failed innovation consistency check and timed out
+    bool bHgtTimeout;                // boolean true if height measurements have failed innovation consistency check and timed out
+    bool bMagTimeout;                // boolean true if magnetometer measurements have failed for too long and have timed out
+    bool bTasTimeout;                // boolean true if true airspeed measurements have failed for too long and have timed out
+    bool bDragTimeout;               // boolean true if drag measurements have failed for too long and have timed out
+    bool bBadIMUdata;                // boolean true if the bad IMU data is detected
+    bool bVelAiding;                 // boolean true if the velocity drift is constrained by observations
+    bool bWaitingForGpsChecks;
+    bool bRunUpdates;       
+    
+    bool bfuseVelData;  // boolean true if gps is fusing velocity
+    bool bfusePosData;  // boolean true if gps is fusing position 
+    bool bfuseHgtData;  // boolean true if gps is fusing height
+
+    bool bEKFGSF_run_filterbank; // boolean true if yaw estimator is running filterbank
+}
+
+// @LoggerMessage: GRS_V
+struct PACKED log_GRSV
+{
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t core;
+
+    float gpsPosEstimationN;
+    float gpsPosEstimationE;
+    float gpsPosEstimationD;
+
+    float gpsVelEstimationN;
+    float gpsVelEstimationE;
+    float gpsVelEstimationD;
+
+    float imuPosEstimationN;
+    float imuPosEstimationE;
+    float imuPosEstimationD;
+
+    float imuVelEstimationN;
+    float imuVelEstimationE;
+    float imuVelEstimationD;
+}
+
+// @LoggerMessage: GRS_E
+struct PACKED log_GRSE
+{
+  LOG_PACKET_HEADER;
+  uint64_t time_us;
+  uint8_t core;
+
+  float PosErrorN;
+  float PosErrorE;
+  float PosErrorD;
+
+  float VelErrorN;
+  float VelErrorE;
+  float VelErrorD;
+};
+
+
 #if HAL_NAVEKF3_AVAILABLE
 #define LOG_STRUCTURE_FROM_NAVEKF3        \
     { LOG_XKF0_MSG, sizeof(log_XKF0), \
@@ -456,7 +528,13 @@ struct PACKED log_XKV {
     { LOG_XKV1_MSG, sizeof(log_XKV), \
       "XKV1","QBffffffffffff","TimeUS,C,V00,V01,V02,V03,V04,V05,V06,V07,V08,V09,V10,V11", "s#------------", "F-------------" , true }, \
     { LOG_XKV2_MSG, sizeof(log_XKV), \
-      "XKV2","QBffffffffffff","TimeUS,C,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23", "s#------------", "F-------------" , true },
+      "XKV2","QBffffffffffff","TimeUS,C,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23", "s#------------", "F-------------" , true }, \
+    { LOG_GRSF_MSG, sizeof(log_GRSF), \
+      "GRSF","QBBBBBBBBBBBBB","TimeUS,C,StatesInit,MagH,VTimeout,PTimeout,HTimeout,MTimeout,TTimeout,DTimeout,BadIMU,VelA,GpsChecks,RunUpdates", "s#------------", "F-------------" , true }, \
+    { LOG_GRSV_MSG, sizeof(log_GRSV), \
+      "GRSV","QBffffffffffff","TimeUS,C,gpsPN,gpsPE,gpsPD,gpsVN,gpsVE,gpsVD,imuPN,imuPE,imuPD,imuVN,imuVE,imuVD", "s#------------", "F-------------" , true }, \
+    { LOG_GRSE_MSG, sizeof(log_GRSE), \
+      "GRSE","QBffffff","TimeUS,C,PosErrorN,PosErrorE,PosErrorD,VelErrorN,VelErrorE,VelErrorD", "s#------", "F-------" , true },
 #else
   #define LOG_STRUCTURE_FROM_NAVEKF3
 #endif

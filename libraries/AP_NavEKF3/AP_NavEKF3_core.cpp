@@ -798,6 +798,10 @@ void NavEKF3_core::UpdateStrapdownEquationsNED()
     // limit states to protect against divergence
     ConstrainStates();
 
+    // Output states log before fusion
+    predImuPos = stateStruct.position;
+    predImuVel = stateStruct.velocity;
+
 #if EK3_FEATURE_BEACON_FUSION
     // If main filter velocity states are valid, update the range beacon receiver position states
     if (filterStatus.flags.horiz_vel) {
@@ -942,6 +946,9 @@ void NavEKF3_core::calcOutputStates()
         // calculate velocity and position tracking errors
         Vector3F velErr = (stateStruct.velocity - outputDataDelayed.velocity);
         Vector3F posErr = (stateStruct.position - outputDataDelayed.position);
+
+        posEKFerror = posErr;
+        velEKFerror = velErr;
 
         if (badIMUdata) {
             // When IMU accel is bad,  calculate an integral that will be used to drive the difference

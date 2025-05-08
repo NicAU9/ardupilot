@@ -1048,6 +1048,15 @@ private:
 
     bool getGPSLLH(Location &loc) const;
 
+    // GRS additionnal variables
+    Vector3F predImuPos; // Position predicted from IMU before any fusion in EKF time horizon
+    Vector3F predImuVel; // Velocity predicted from IMU before any fusion in EKF time horizon
+    Vector3F insImuPos;
+    Vector3F insImuVel;
+
+    Vector3F posEKFerror; // Erreur of position between the EKF prediction and the Ins. (applied for correction)
+    Vector3F velEKFerror; // Erreur of velocity between the EKF prediction and the Ins. (applied for correction)
+
     // Variables
     bool statesInitialised;         // boolean true when filter states have been initialised
     bool magHealth;                 // boolean true if magnetometer has passed innovation consistency check
@@ -1635,4 +1644,9 @@ private:
     void Log_Write_State_Variances(uint64_t time_us);
     void Log_Write_Timing(uint64_t time_us);
     void Log_Write_GSF(uint64_t time_us);
+
+    // Grs Log
+    void Log_Write_GRSF(uint64_t time_us) const;
+    void Log_Write_GRSV(uint64_t time_us) const;
+    void Log_Write_GRSE(uint64_t time_us) const;
 };
