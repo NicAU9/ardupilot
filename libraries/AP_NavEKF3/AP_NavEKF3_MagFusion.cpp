@@ -423,6 +423,7 @@ void NavEKF3_core::SelectMagFusion()
     // determine if conditions are right to start a new fusion cycle
     // wait until the EKF time horizon catches up with the measurement
     bool dataReady = (magDataToFuse && statesInitialised && use_compass() && yawAlignComplete);
+    bMagFusion = dataReady;
     if (dataReady) {
         // use the simple method of declination to maintain heading if we cannot use the magnetic field states
         if(inhibitMagStates || magStateResetRequest || !magStateInitComplete) {

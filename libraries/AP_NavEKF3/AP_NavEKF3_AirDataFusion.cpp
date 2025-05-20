@@ -243,6 +243,8 @@ void NavEKF3_core::SelectBetaDragFusion()
     // set true when sideslip fusion is feasible (requires zero sideslip assumption to be valid and use of wind states)
     const bool f_beta_feasible = (assume_zero_sideslip() && !inhibitWindStates);
 
+    bBetaFeasible = f_beta_feasible;
+
     // use synthetic sideslip fusion if feasible, required and enough time has lapsed since the last fusion
     if (f_beta_feasible && f_timeTrigger) {
         // unless air data is required to constrain drift, it is only used to update wind state estimates

@@ -445,7 +445,7 @@ void NavEKF3_core::detectFlight()
         getGyroBias(gyroBias);
         yawEstimator->setGyroBias(gyroBias);
     }
-
+    inFlight = true;
     // store current on-ground  and in-air status for next time
     prevOnGround = onGround;
     prevInFlight = inFlight;

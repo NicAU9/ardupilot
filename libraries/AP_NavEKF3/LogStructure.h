@@ -21,6 +21,7 @@
     LOG_XKY0_MSG, \
     LOG_XKY1_MSG, \
     LOG_GRSF_MSG, \
+    LOG_GRSF2_MSG,\
     LOG_GRSV_MSG, \
     LOG_GRSP_MSG, \
     LOG_GRSE_MSG
@@ -455,6 +456,26 @@ struct PACKED log_GRSF
     uint8_t bEKFGSF_run_filterbank; // boolean true if yaw estimator is running filterbank
 };
 
+// @LoggerMessage: GRS_F2
+
+struct PACKED log_GRSF2
+{
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t core;
+
+    uint8_t bMagDataReady;
+    uint8_t bBetaDragFusion;
+    uint8_t bWindOnly;
+
+    uint8_t bGoodAttitude;
+    uint8_t bHoriVelEstimate;
+    uint8_t bHoriPosEstimateRel;
+    uint8_t bHoriPosEstimateAbs;
+    uint8_t bUsingGPS;
+    uint8_t bGPSquality;
+};
+
 // @LoggerMessage: GRS_V
 struct PACKED log_GRSV
 {
@@ -534,6 +555,8 @@ struct PACKED log_GRSE
       "XKV2","QBffffffffffff","TimeUS,C,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23", "s#------------", "F-------------" , true }, \
     { LOG_GRSF_MSG, sizeof(log_GRSF), \
       "GRSF","QBBBBBBBBBBBBBB","TimeUS,C,Init,MagH,VTO,PTO,HTO,MTO,TTO,DTO,BIMU,VelA,GpsCh,RUp,FBank", "s#-------------", "F--------------" , true }, \
+    { LOG_GRSF2_MSG, sizeof(log_GRSF2), \
+      "GRSF2","QBBBBBBBBBB","TimeUS,C,Mdata,BDF,fATT,Wind,fV,fPR,fPA,GPSu,GPSq", "s#---------", "F----------" , true }, \
     { LOG_GRSV_MSG, sizeof(log_GRSV), \
       "GRSV","QBffffff","TimeUS,C,gpsVN,gpsVE,gpsVD,imuVN,imuVE,imuVD", "s#------", "F-------" , true }, \
     { LOG_GRSP_MSG, sizeof(log_GRSP), \

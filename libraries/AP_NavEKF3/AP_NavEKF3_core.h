@@ -1057,6 +1057,9 @@ private:
     Vector3F posEKFerror; // Erreur of position between the EKF prediction and the Ins. (applied for correction)
     Vector3F velEKFerror; // Erreur of velocity between the EKF prediction and the Ins. (applied for correction)
 
+    bool bBetaFeasible; // Flag for SideSlip fusion
+    bool bMagFusion; // flag for mag fusion
+
     // Variables
     bool statesInitialised;         // boolean true when filter states have been initialised
     bool magHealth;                 // boolean true if magnetometer has passed innovation consistency check
@@ -1647,6 +1650,7 @@ private:
 
     // Grs Log
     void Log_Write_GRSF(uint64_t time_us) const;
+    void Log_Write_GRSF2(uint64_t time_us) const;
     void Log_Write_GRSV(uint64_t time_us) const;
     void Log_Write_GRSP(uint64_t time_us) const;
     void Log_Write_GRSE(uint64_t time_us) const;
