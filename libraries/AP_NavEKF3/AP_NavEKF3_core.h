@@ -1060,7 +1060,7 @@ private:
 
     bool bBetaFeasible; // Flag for SideSlip fusion
     bool bMagFusion; // Flag for mag fusion
-    Vector3f eulerAngles;
+    Vector3f eulerAnglesLog;
 
     // Variables
     bool statesInitialised;         // boolean true when filter states have been initialised

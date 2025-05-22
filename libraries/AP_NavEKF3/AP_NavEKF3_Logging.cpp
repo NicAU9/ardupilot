@@ -495,13 +495,14 @@ void NavEKF3_core::Log_Write_GRSS(uint64_t time_us) const
         accManouvering : accNavMag,
         accManouveringFiltered : accNavMagHoriz,
 
-        roll : eulerAngles.x,
-        pitch : eulerAngles.y,
-        yaw : eulerAngles.z,
+        roll : eulerAnglesLog.x,
+        pitch : eulerAnglesLog.y,
+        yaw : eulerAnglesLog.z,
 
         imuPosOutputN : outImuPos.x,
         imuPosOutputE : outImuPos.y,
         imuPosOutputD : outImuPos.z
+    };
 
     AP::logger().WriteBlock(&grss, sizeof(grss));
 }
