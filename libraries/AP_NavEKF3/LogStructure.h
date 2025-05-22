@@ -556,7 +556,7 @@ struct PACKED log_GRSE
     { LOG_GRSF_MSG, sizeof(log_GRSF), \
       "GRSF","QBBBBBBBBBBBBBB","TimeUS,C,Init,MagH,VTO,PTO,HTO,MTO,TTO,DTO,BIMU,VelA,GpsCh,RUp,FBank", "s#-------------", "F--------------" , true }, \
     { LOG_GRSS_MSG, sizeof(log_GRSS), \
-      "GRSS","QBBBBBBBBB","TimeUS,C,accM,accMF,roll,pitch,yaw,poutN,poutE,poutD", "s#--------", "F---------" , true }, \
+      "GRSS","QBffffffff","TimeUS,C,accM,accMF,roll,pitch,yaw,poutN,poutE,poutD", "s#--------", "F---------" , true }, \
     { LOG_GRSV_MSG, sizeof(log_GRSV), \
       "GRSV","QBffffff","TimeUS,C,gpsVN,gpsVE,gpsVD,imuVN,imuVE,imuVD", "s#------", "F-------" , true }, \
     { LOG_GRSP_MSG, sizeof(log_GRSP), \
