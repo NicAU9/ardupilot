@@ -492,17 +492,17 @@ void NavEKF3_core::Log_Write_GRSS(uint64_t time_us) const
         time_us      : time_us,
         core         : DAL_CORE(core_index),
 
-        bMagDataReady : bMagFusion,
-        bBetaDragFusion : bBetaFeasible,
-        bWindOnly : airDataFusionWindOnly,
+        accManouvering : accNavMag,
+        accManouveringFiltered : accNavMagHoriz,
 
-        bGoodAttitude : filterStatus.flags.attitude,
-        bHoriVelEstimate : filterStatus.flags.horiz_vel,
-        bHoriPosEstimateRel : filterStatus.flags.horiz_pos_rel,
-        bHoriPosEstimateAbs : filterStatus.flags.horiz_pos_abs,
-        bUsingGPS: filterStatus.flags.using_gps,
-        bGPSquality: filterStatus.flags.gps_quality_good
-    };
+        roll : eulerAngles.x,
+        pitch : eulerAngles.y,
+        yaw : eulerAngles.z,
+
+        imuPosOutputN : outImuPos.x,
+        imuPosOutputE : outImuPos.y,
+        imuPosOutputD : outImuPos.z
+
     AP::logger().WriteBlock(&grss, sizeof(grss));
 }
 

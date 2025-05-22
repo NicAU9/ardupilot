@@ -456,7 +456,7 @@ struct PACKED log_GRSF
     uint8_t bEKFGSF_run_filterbank; // boolean true if yaw estimator is running filterbank
 };
 
-// @LoggerMessage: GRS_F2
+// @LoggerMessage: GRS_S
 
 struct PACKED log_GRSS
 {
@@ -464,16 +464,16 @@ struct PACKED log_GRSS
     uint64_t time_us;
     uint8_t core;
 
-    uint8_t bMagDataReady;
-    uint8_t bBetaDragFusion;
-    uint8_t bWindOnly;
+    float accManouvering;
+    float accManouveringFiltered;
 
-    uint8_t bGoodAttitude;
-    uint8_t bHoriVelEstimate;
-    uint8_t bHoriPosEstimateRel;
-    uint8_t bHoriPosEstimateAbs;
-    uint8_t bUsingGPS;
-    uint8_t bGPSquality;
+    float roll;
+    float pitch;
+    float yaw;
+
+    float imuPosOutputN;
+    float imuPosOutputE;
+    float imuPosOutputD;
 };
 
 // @LoggerMessage: GRS_V
@@ -556,7 +556,7 @@ struct PACKED log_GRSE
     { LOG_GRSF_MSG, sizeof(log_GRSF), \
       "GRSF","QBBBBBBBBBBBBBB","TimeUS,C,Init,MagH,VTO,PTO,HTO,MTO,TTO,DTO,BIMU,VelA,GpsCh,RUp,FBank", "s#-------------", "F--------------" , true }, \
     { LOG_GRSS_MSG, sizeof(log_GRSS), \
-      "GRSS","QBBBBBBBBBB","TimeUS,C,Mdata,BDF,fATT,Wind,fV,fPR,fPA,GPSu,GPSq", "s#---------", "F----------" , true }, \
+      "GRSS","QBBBBBBBBB","TimeUS,C,accM,accMF,roll,pitch,yaw,poutN,poutE,poutD", "s#--------", "F---------" , true }, \
     { LOG_GRSV_MSG, sizeof(log_GRSV), \
       "GRSV","QBffffff","TimeUS,C,gpsVN,gpsVE,gpsVD,imuVN,imuVE,imuVD", "s#------", "F-------" , true }, \
     { LOG_GRSP_MSG, sizeof(log_GRSP), \

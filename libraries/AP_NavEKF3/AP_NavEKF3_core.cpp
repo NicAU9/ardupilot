@@ -752,6 +752,8 @@ void NavEKF3_core::UpdateStrapdownEquationsNED()
 
     stateStruct.quat.normalize();
 
+    getEulerAngles(eulerAngles);
+
     // transform body delta velocities to delta velocities in the nav frame
     // use the nav frame from previous time step as the delta velocities
     // have been rotated into that frame
@@ -876,6 +878,7 @@ void NavEKF3_core::calcOutputStates()
 
     // apply a trapezoidal integration to velocities to calculate position
     outputDataNew.position += (outputDataNew.velocity + lastVelocity) * (imuDataNew.delVelDT*0.5f);
+    outImuPos = outputDataNew.position
 
     // If the IMU accelerometer is offset from the body frame origin, then calculate corrections
     // that can be added to the EKF velocity and position outputs so that they represent the velocity

@@ -1053,12 +1053,14 @@ private:
     Vector3F predImuVel; // Velocity predicted from IMU before any fusion in EKF time horizon
     Vector3F insImuPos;
     Vector3F insImuVel;
+    Vector3F outImuPos;
 
     Vector3F posEKFerror; // Erreur of position between the EKF prediction and the Ins. (applied for correction)
     Vector3F velEKFerror; // Erreur of velocity between the EKF prediction and the Ins. (applied for correction)
 
     bool bBetaFeasible; // Flag for SideSlip fusion
-    bool bMagFusion; // flag for mag fusion
+    bool bMagFusion; // Flag for mag fusion
+    Vector3f eulerAngles;
 
     // Variables
     bool statesInitialised;         // boolean true when filter states have been initialised
