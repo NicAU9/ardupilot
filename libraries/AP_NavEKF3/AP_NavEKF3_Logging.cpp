@@ -403,7 +403,7 @@ void NavEKF3_core::Log_Write(uint64_t time_us)
 
     // GRS logs
     Log_Write_GRSF(time_us);
-    Log_Write_GRSF2(time_us);
+    Log_Write_GRSS(time_us);
     Log_Write_GRSV(time_us);
     Log_Write_GRSP(time_us);
     Log_Write_GRSE(time_us);
@@ -485,10 +485,10 @@ void NavEKF3_core::Log_Write_GRSF(uint64_t time_us) const
     AP::logger().WriteBlock(&grsf, sizeof(grsf));
 }
 
-void NavEKF3_core::Log_Write_GRSF2(uint64_t time_us) const
+void NavEKF3_core::Log_Write_GRSS(uint64_t time_us) const
 {
-    const struct log_GRSF2 grsf2{
-        LOG_PACKET_HEADER_INIT(LOG_GRSF2_MSG),
+    const struct log_GRSS grss{
+        LOG_PACKET_HEADER_INIT(LOG_GRSS_MSG),
         time_us      : time_us,
         core         : DAL_CORE(core_index),
 
@@ -503,7 +503,7 @@ void NavEKF3_core::Log_Write_GRSF2(uint64_t time_us) const
         bUsingGPS: filterStatus.flags.using_gps,
         bGPSquality: filterStatus.flags.gps_quality_good
     };
-    AP::logger().WriteBlock(&grsf2, sizeof(grsf2));
+    AP::logger().WriteBlock(&grss, sizeof(grss));
 }
 
 void NavEKF3_core::Log_Write_GRSV(uint64_t time_us) const
